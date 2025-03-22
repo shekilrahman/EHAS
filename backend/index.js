@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: '*', // Allow all origins or specify the frontend's URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'x-api-key'], // Include 'x-api-key' in allowed headers
+  allowedHeaders: ['Content-Type', 'api-key'],
 }));
 
 const server = http.createServer(app);
@@ -36,11 +36,9 @@ app.use(morgan("dev")); // Logger for HTTP requests
 
 // Import Routes
 const staffRoutes = require("./routes/staff");
-const menuRoutes = require("./routes/menu");
-const groupRoutes = require("./routes/group");
-const tableRoutes = require("./routes/table");
-const orderRoutes = require("./routes/order");
-const printerRoutes = require("./routes/printer");
+const examRoutes = require("./routes/exam");
+const studentRoutes = require("./routes/student");
+const roomRoutes = require("./routes/room");
 
 // API Key Middleware
 const apiKeyMiddleware = require("./middleware/apiKeyMiddleware");
@@ -49,12 +47,10 @@ const apiKeyMiddleware = require("./middleware/apiKeyMiddleware");
 app.get("/local-ip", (req, res) => res.json({ ip: getLocalIP() }));
 
 // Protected Routes
-app.use("/staff", apiKeyMiddleware, staffRoutes);
-app.use("/menu", apiKeyMiddleware, menuRoutes);
-app.use("/group", apiKeyMiddleware, groupRoutes);
-app.use("/table", apiKeyMiddleware, tableRoutes(io));
-app.use("/order", apiKeyMiddleware, orderRoutes(io));
-app.use("/printer", apiKeyMiddleware, printerRoutes);
+app.use("/staff", apiKeyMiddleware, staffRoutes(io));
+app.use("/exam", apiKeyMiddleware, examRoutes);
+app.use("/student", apiKeyMiddleware, studentRoutes(io));
+app.use("/room", apiKeyMiddleware, roomRoutes(io));
 
 // Global Error Handling
 app.use((err, req, res, next) => {

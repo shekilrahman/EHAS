@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const dbConnect = async () => {
   try {
-    const dbUri = process.env.MONGO_URI || "mongodb://localhost:27017/teapotDB";
+    const dbUri = process.env.MONGO_URI || "mongodb://localhost:27017/ehas";
     await mongoose.connect(dbUri);
     console.log("✅ MongoDB connected successfully");
   } catch (error) {

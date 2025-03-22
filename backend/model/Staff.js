@@ -1,29 +1,21 @@
 const mongoose = require("mongoose");
 
-const staffSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  type: { type: String, required: true, enum: ["Waiter", "Chef", "Admin"] },
-  passcode: { 
-    type: Number, 
-    required: true, 
-    validate: {
-      validator: function (v) {
-        return v.toString().length === 6;
-      },
-      message: "Passcode must be exactly 6 digits long."
-    }
+const examSchema = new mongoose.Schema({
+  exam_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Exam', required: true },
+  status: { 
+    type: String, 
+    enum: ['upcoming', 'ongoing', 'end'], 
+    default: 'upcoming' 
   }
+});
+
+const staffSchema = new mongoose.Schema({
+  staff_id: { type: String, required: true, unique: true  },
+  name: { type: String, required: true },
+  department: { type: String, required: true },
+  password: { type: String, required: true },
+  exams: { type: [examSchema], default: [] } // exams are optional and default to an empty array
 });
 
 const Staff = mongoose.model("Staff", staffSchema);
 module.exports = Staff;
-
-
-
-/*
---------Staff-----------
-  _id: ObjectId, 		  // Unique identifier
-  name: String,  		  // Staff member's name
-  type: String,  		  // Role: ['waiter', 'chef', 'manager']
-  passcode: String 		// Hashed passcode for login
-*/
